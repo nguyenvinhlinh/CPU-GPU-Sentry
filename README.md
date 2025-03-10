@@ -1,4 +1,4 @@
-# CpuGpuSentry
+# Cpu/Gpu Sentry
 
 To start your Phoenix server:
 
