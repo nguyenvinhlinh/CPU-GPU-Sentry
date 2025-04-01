@@ -4,12 +4,20 @@ defmodule CpuGpuSentry.EventStash do
 
   def start_link(_args), do: CpuGpuSentry.EventStash.start_link()
   def start_link() do
-    {:ok, pid} = GenServer.start_link(__MODULE__, nil)
+    {:ok, pid} = GenServer.start_link(__MODULE__, nil, name: __MODULE__)
     pid_string = pid
     |> :erlang.pid_to_list()
     |> to_string()
     Logger.info("[CpuGpuSentry.EventStash] PID:#{pid_string} Started ")
     {:ok, pid}
+  end
+
+  def pop() do
+    GenServer.call(__MODULE__, :pop)
+  end
+
+  def append(event) do
+    GenServer.cast(__MODULE__, {:append, event})
   end
 
   @impl true
