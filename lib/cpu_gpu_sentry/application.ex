@@ -11,6 +11,7 @@ defmodule CpuGpuSentry.Application do
       # Starts a worker by calling: CpuGpuSentry.Worker.start_link(arg)
       # {CpuGpuSentry.Worker, arg}
       {CpuGpuSentry.EventStash, nil},
+      {CpuGpuSentry.EventDispatcher, nil}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

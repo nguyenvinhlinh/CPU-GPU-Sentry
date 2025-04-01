@@ -22,8 +22,10 @@ defmodule CpuGpuSentry.EventStash do
 
   @impl true
   def init(_args) do
-    state = []
-    {:ok, state}
+    event_list = [
+      :setup_wrapper_script
+    ]
+    {:ok, event_list}
   end
 
   @impl true
