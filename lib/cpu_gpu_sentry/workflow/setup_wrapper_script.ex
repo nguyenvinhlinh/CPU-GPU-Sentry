@@ -1,6 +1,5 @@
 defmodule CpuGpuSentry.Workflow.SetupWrapperScript do
   require Logger
-  use GenServer
 
   @wrapper_script_content """
   #!/usr/bin/env bash
@@ -36,21 +35,21 @@ defmodule CpuGpuSentry.Workflow.SetupWrapperScript do
     if is_miner_software_directory_exists?() == false do
       mkdir_miner_software_directory()
     else
-      Logger.info("[EventHandler.SetupWrapperScript] Skip making miner_software_directory")
+      Logger.info("[Workflow.SetupWrapperScript] Skip making miner_software_directory")
     end
 
     if is_wrapper_script_exists?() == false do
       write_wrapper_script()
       chmod_wrapper_script()
     else
-      Logger.info("[EventHandler.SetupWrapperScript] Skip writing wrapper.sh")
+      Logger.info("[Workflow.SetupWrapperScript] Skip writing wrapper.sh")
     end
   end
 
   def write_wrapper_script() do
     installation_path = Application.get_env(:cpu_gpu_sentry, :installation_path)
     wrapper_script_path = Path.join([installation_path, "miner_softwares", "wrapper.sh"])
-    Logger.info("[EventHandler.SetupWrapperScript] Writing #{wrapper_script_path}")
+    Logger.info("[Workflow.SetupWrapperScript] Writing #{wrapper_script_path}")
     File.write(wrapper_script_path, @wrapper_script_content)
   end
 
@@ -63,14 +62,14 @@ defmodule CpuGpuSentry.Workflow.SetupWrapperScript do
   def chmod_wrapper_script() do
     installation_path = Application.get_env(:cpu_gpu_sentry, :installation_path)
     wrapper_script_path = Path.join([installation_path, "miner_softwares", "wrapper.sh"])
-    Logger.info("[EventHandler.SetupWrapperScript] Chmod #{wrapper_script_path} 755")
+    Logger.info("[Workflow.SetupWrapperScript] Chmod #{wrapper_script_path} 755")
     File.chmod(wrapper_script_path, 0o755)
   end
 
   def mkdir_miner_software_directory() do
     installation_path = Application.get_env(:cpu_gpu_sentry, :installation_path)
     miner_software_path = Path.join([installation_path, "miner_softwares"])
-    Logger.info("[EventHandler.SetupWrapperScript] Mkdir #{miner_software_path}")
+    Logger.info("[Workflow.SetupWrapperScript] Mkdir #{miner_software_path}")
     File.mkdir(miner_software_path)
   end
 

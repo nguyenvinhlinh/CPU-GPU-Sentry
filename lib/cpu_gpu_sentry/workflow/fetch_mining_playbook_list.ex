@@ -5,6 +5,7 @@ defmodule CpuGpuSentry.Workflow.FetchMiningPlaybookList do
     CpuGpuSentry.TemporaryMiningPlaybookStash.clear()
     case fetch_mining_playbook_list() do
       {:ok, mining_playbook_list} ->
+        Logger.info("[Workflow.FetchMiningPlaybookList] Inserted into TemporaryMiningPlaybookStash")
         for mining_playbook <- mining_playbook_list do
           CpuGpuSentry.TemporaryMiningPlaybookStash.insert(mining_playbook)
         end

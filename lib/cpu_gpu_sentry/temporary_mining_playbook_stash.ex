@@ -17,7 +17,7 @@ defmodule CpuGpuSentry.TemporaryMiningPlaybookStash do
   end
 
   def insert(mining_playbook) do
-    mining_playbook_mod = %{
+    mining_playbook_mod = %CpuGpuSentry.MiningPlaybookStash.MiningPlaybook{
       id: Map.get(mining_playbook, "id"),
       software_name: Map.get(mining_playbook, "software_name"),
       software_version: Map.get(mining_playbook, "software_version"),
