@@ -14,7 +14,6 @@ defmodule CpuGpuSentry.EventDispatcher do
     {:ok, pid}
   end
 
-
   @impl true
   def init(_args) do
     {:ok, nil}
@@ -26,8 +25,6 @@ defmodule CpuGpuSentry.EventDispatcher do
     {:noreply, nil}
   end
 
-
-
   def interval_function() do
     Logger.info("[CpuGpuSentry.EventDispatcher] interval_function")
     event = EventStash.pop()
@@ -35,15 +32,22 @@ defmodule CpuGpuSentry.EventDispatcher do
     case event do
       :setup_wrapper_script ->
         Logger.info("[CpuGpuSentry.EventDispatcher] Event :setup_wrapper_script")
-        CpuGpuSentry.EventHandler.SetupWrapperScript.mkdir_miner_software_directory()
-        CpuGpuSentry.EventHandler.SetupWrapperScript.write_wrapper_script()
-        CpuGpuSentry.EventHandler.SetupWrapperScript.chmod_wrapper_script()
+        CpuGpuSentry.EventHandler.SetupWrapperScript.execute()
       :fetch_mining_playbook_list ->
         Logger.info("[CpuGpuSentry.EventDispatcher] Event :fetch_mining_playbook_list")
+        # fetch a list of new mining playbook
+
+
+
         :ok
       _else ->
         :ok
     end
-    Process.send_after(self(), :interval_function, 5_000)
+
+    if Kernel.is_nil(event) do
+      Process.send_after(self(), :interval_function, 10_000)
+    else
+      Process.send_after(self(), :interval_function, 1_000)
+    end
   end
 end

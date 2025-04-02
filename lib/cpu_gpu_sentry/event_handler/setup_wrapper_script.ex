@@ -32,11 +32,32 @@ defmodule CpuGpuSentry.EventHandler.SetupWrapperScript do
   https://hexdocs.pm/elixir/Port.html#module-zombie-operating-system-processes
   """
 
+  def execute() do
+    if is_miner_software_directory_exists?() == false do
+      mkdir_miner_software_directory()
+    else
+      Logger.info("[EventHandler.SetupWrapperScript] Skip making miner_software_directory")
+    end
+
+    if is_wrapper_script_exists?() == false do
+      write_wrapper_script()
+      chmod_wrapper_script()
+    else
+      Logger.info("[EventHandler.SetupWrapperScript] Skip writing wrapper.sh")
+    end
+  end
+
   def write_wrapper_script() do
     installation_path = Application.get_env(:cpu_gpu_sentry, :installation_path)
     wrapper_script_path = Path.join([installation_path, "miner_softwares", "wrapper.sh"])
     Logger.info("[EventHandler.SetupWrapperScript] Writing #{wrapper_script_path}")
     File.write(wrapper_script_path, @wrapper_script_content)
+  end
+
+  def is_wrapper_script_exists?() do
+    installation_path = Application.get_env(:cpu_gpu_sentry, :installation_path)
+    wrapper_script_path = Path.join([installation_path, "miner_softwares", "wrapper.sh"])
+    File.exists?(wrapper_script_path)
   end
 
   def chmod_wrapper_script() do
@@ -52,4 +73,11 @@ defmodule CpuGpuSentry.EventHandler.SetupWrapperScript do
     Logger.info("[EventHandler.SetupWrapperScript] Mkdir #{miner_software_path}")
     File.mkdir(miner_software_path)
   end
+
+  def is_miner_software_directory_exists?() do
+    installation_path = Application.get_env(:cpu_gpu_sentry, :installation_path)
+    miner_software_path = Path.join([installation_path, "miner_softwares"])
+    File.exists?(miner_software_path)
+  end
+
 end
