@@ -3,12 +3,13 @@ defmodule CpuGpuSentry.Workflow.FetchMiningPlaybookList do
 
   def execute() do
     CpuGpuSentry.TemporaryMiningPlaybookStash.clear()
-    with {:ok, mining_playbook_list} <- fetch_mining_playbook_list() do
-      for mining_playbook <- mining_playbook_list do
-        CpuGpuSentry.TemporaryMiningPlaybookStash.insert(mining_playbook)
-      end
-    else
-      _error -> {:error, :fetch_mining_playbook_list}
+    case fetch_mining_playbook_list() do
+      {:ok, mining_playbook_list} ->
+        for mining_playbook <- mining_playbook_list do
+          CpuGpuSentry.TemporaryMiningPlaybookStash.insert(mining_playbook)
+        end
+      _else ->
+        {:error, :fetch_mining_playbook_list}
     end
   end
 
@@ -23,7 +24,7 @@ defmodule CpuGpuSentry.Workflow.FetchMiningPlaybookList do
 
     case HTTPoison.get(url, header_list) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body} } ->
-        Logger.info("[Workflow.FetchMiningPlaybookList] mining playbook list fetched")
+        Logger.info("[Workflow.FetchMiningPlaybookList] Mining playbook list fetched")
         mining_playbook_list = Jason.decode!(body)
         {:ok, mining_playbook_list}
       {:ok, %HTTPoison.Response{status_code: 401} } ->
@@ -56,15 +57,6 @@ defmodule CpuGpuSentry.Workflow.FetchMiningPlaybookList do
         {:error}
     end
   end
-
-  # def fetch_mining_playbook_module_list(mining_playbook_list) do
-  #   for playbook <- mining_playbook_list do
-  #     module_name = playbook
-
-  #   end
-  # end
-
-
 
   def load_binary_module(module_name, module_binary) do
     module = String.to_atom(module_name)

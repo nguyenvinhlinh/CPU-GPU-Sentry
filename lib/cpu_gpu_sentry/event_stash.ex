@@ -22,9 +22,7 @@ defmodule CpuGpuSentry.EventStash do
 
   @impl true
   def init(_args) do
-    event_list = [
-      :setup_wrapper_script
-    ]
+    event_list = []
     {:ok, event_list}
   end
 
