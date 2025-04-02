@@ -22,11 +22,12 @@ defmodule CpuGpuSentry.TemporaryMiningPlaybookStash do
       software_name: Map.get(mining_playbook, "software_name"),
       software_version: Map.get(mining_playbook, "software_version"),
       module: Map.get(mining_playbook, "module") |> String.to_atom(),
+      command_argument: Map.get(mining_playbook, "command_argument"),
       algorithm_1: Map.get(mining_playbook, "algorithm_1"),
       algorithm_2: Map.get(mining_playbook, "algorithm_2"),
       coin_name_1: Map.get(mining_playbook, "coin_name_1"),
       coin_name_2: Map.get(mining_playbook, "coin_name_2"),
-      expected_status: Map.get(mining_playbook, "expected_status"),
+      expected_status: Map.get(mining_playbook, "expected_status", "mining") |> String.to_atom(),
       inserted_at: Map.get(mining_playbook, "inserted_at") |> NaiveDateTime.from_iso8601!(),
       updated_at: Map.get(mining_playbook, "updated_at") |> NaiveDateTime.from_iso8601!()
     }
