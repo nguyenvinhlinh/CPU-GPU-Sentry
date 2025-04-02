@@ -1,4 +1,4 @@
-defmodule Miner.XMRIG_6_22_2 do
+defmodule MinerProvision.XMRIG_6_22_2 do
  # @behaviour Miners.GenericMiner
   require Logger
   alias HTTPoison.Response
