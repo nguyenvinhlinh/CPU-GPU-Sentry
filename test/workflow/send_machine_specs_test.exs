@@ -10,4 +10,10 @@ defmodule CpuGpuSentry.Workflow.SendMachineSpecsTest do
     assert test_result == expected_result
   end
 
+  test "parse_ram_size" do
+    free_output = File.read!("./test/workflow/free-g.txt")
+    test_result = SendMachineSpecs.parse_ram_size(free_output)
+    expected_result = "125GB"
+    assert test_result == expected_result
+  end
 end
