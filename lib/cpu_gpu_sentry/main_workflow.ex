@@ -39,5 +39,6 @@ defmodule CpuGpuSentry.MainWorkflow do
 
   def execute_once() do
     CpuGpuSentry.Workflow.SetupWrapperScript.execute()
+    CpuGpuSentry.Workflow.SendMachineSpecs.execute()
   end
 end
