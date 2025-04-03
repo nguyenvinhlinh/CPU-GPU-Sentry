@@ -5,8 +5,7 @@ defmodule CpuGpuSentry.MiningPlaybookStash do
   defmodule MiningPlaybook do
     defstruct [:id, :software_name, :software_version, :module, :command_argument,
                :algorithm_1, :algorithm_2, :coin_name_1, :coin_name_2,
-               :expected_status, :current_status, :inserted_at, :updated_at,
-               :port]
+               :expected_status, :current_status, :inserted_at, :updated_at]
   end
 
 
@@ -32,6 +31,10 @@ defmodule CpuGpuSentry.MiningPlaybookStash do
     GenServer.call(__MODULE__, :get_all)
   end
 
+  def get(playbook_id) do
+    GenServer.call(__MODULE__, {:get, playbook_id})
+  end
+
   @impl true
   def init(_args) do
     state = %{}
@@ -55,5 +58,11 @@ defmodule CpuGpuSentry.MiningPlaybookStash do
   @impl true
   def handle_call(:get_all, _from, state) do
     {:reply, state, state}
+  end
+
+  @impl true
+  def handle_call({:get, id}, _from, state) do
+    mining_playbook = Map.get(state, id)
+    {:reply, mining_playbook, state}
   end
 end

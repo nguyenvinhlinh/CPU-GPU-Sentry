@@ -8,6 +8,7 @@ defmodule CpuGpuSentry.Workflow.RemoveInvalidMiningPlaybookList do
       Logger.info("[Workflow.RemoveInvalidMiningPlaybookList] Compare and found no invalid mining playbook")
     else
       Logger.info("[Workflow.RemoveInvalidMiningPlaybookList] Compare and found invalid mining playbook list")
+      remove_invalid_mining_playbook_list()
     end
   end
 
@@ -27,8 +28,8 @@ defmodule CpuGpuSentry.Workflow.RemoveInvalidMiningPlaybookList do
 
   def remove_invalid_mining_playbook_list() do
     exist_mining_playbook_map = CpuGpuSentry.MiningPlaybookStash.get_all()
-    for {k, v} <- exist_mining_playbook_map do
-      if Kernel.is_nil(v.port), do: Port.close(v.port)
+    for {playbook_id, _v} <- exist_mining_playbook_map do
+      CpuGpuSentry.PortProcessRunner.stop(playbook_id)
     end
     CpuGpuSentry.MiningPlaybookStash.clear()
   end
