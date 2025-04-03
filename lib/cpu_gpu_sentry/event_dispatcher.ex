@@ -31,24 +31,11 @@ defmodule CpuGpuSentry.EventDispatcher do
 
     case event do
       :shutdown ->
-        Logger.info("[CpuGpuSentry.EventDispatcher] Event :setup_wrapper_script")
-        CpuGpuSentry.EventHandler.SetupWrapperScript.execute()
+        Logger.info("[CpuGpuSentry.EventDispatcher] Event Shutdown")
       :restart ->
-        Logger.info("[CpuGpuSentry.EventDispatcher] Event :fetch_mining_playbook_list")
-
-        # fetch a list of new mining playbook
-        
-
-
-        :ok
+        Logger.info("[CpuGpuSentry.EventDispatcher] Event Restart")
       _else ->
         :ok
-    end
-
-    if Kernel.is_nil(event) do
-      Process.send_after(self(), :interval_function, 10_000)
-    else
-      Process.send_after(self(), :interval_function, 1_000)
     end
   end
 end

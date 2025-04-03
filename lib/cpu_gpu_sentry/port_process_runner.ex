@@ -60,12 +60,7 @@ defmodule CpuGpuSentry.PortProcessRunner do
   end
 
   @impl true
-  def handle_cast(:close_port, state) do
-
-  end
-
-  @impl true
-  def terminate(reason, state) do
+  def terminate(_reason, state) do
     if Kernel.is_nil(state.port) do
       Logger.info("[PortProcessRunner][#{state.playbook_id}] Skip closing port because it's nil")
 
