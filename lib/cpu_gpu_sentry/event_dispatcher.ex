@@ -30,13 +30,14 @@ defmodule CpuGpuSentry.EventDispatcher do
     event = EventStash.pop()
 
     case event do
-      :setup_wrapper_script ->
+      :shutdown ->
         Logger.info("[CpuGpuSentry.EventDispatcher] Event :setup_wrapper_script")
         CpuGpuSentry.EventHandler.SetupWrapperScript.execute()
-      :fetch_mining_playbook_list ->
+      :restart ->
         Logger.info("[CpuGpuSentry.EventDispatcher] Event :fetch_mining_playbook_list")
-        # fetch a list of new mining playbook
 
+        # fetch a list of new mining playbook
+        
 
 
         :ok
