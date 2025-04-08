@@ -67,18 +67,30 @@ defmodule MinerProvision.XMRIG_6_22_2 do
     :erl_tar.extract(miner_archive_file_path, [{:cwd, miner_softwares_directory}, :compressed])
   end
 
+  def get_hashrate_summary() do
+    url = Path.join(["127.0.0.1:10001", @xmrig_api_path])
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        parse_xmrig_summary(body)
+      _ ->
+        Logger.error("[XMRIG_6_22_2] Cannot get xmrig summary #{url}")
+        %MinerProvision.HashrateSummary{}
+    end
+  end
+
+
   def parse_xmrig_summary(json_string) do
-    xmr_summary_map = json_string
+    xmrig_summary_map = json_string
     |> Jason.decode!()
 
-    cpu_hashrate = xmr_summary_map
+    cpu_hashrate = xmrig_summary_map
     |> Map.get("hashrate")
     |> Map.get("total")
     |> Enum.at(0)
 
     cpu_hashrate_mod = if(cpu_hashrate == nil, do: nil, else: Kernel.round(cpu_hashrate))
 
-    %{
+    %MinerProvision.HashrateSummary{
       cpu_hashrate_uom: "H/s",
       cpu_hashrate: cpu_hashrate_mod
     }
