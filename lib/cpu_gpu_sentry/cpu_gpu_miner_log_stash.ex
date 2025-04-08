@@ -1,4 +1,4 @@
-defmodule CpuGpuSentry.CpuGpuMinerLogStash do
+defmodule CpuGpuSentry.LogStash do
   use GenServer
   require Logger
   defmodule State do
@@ -42,12 +42,16 @@ defmodule CpuGpuSentry.CpuGpuMinerLogStash do
   def start_link(_args), do: start_link()
   def start_link() do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil, name: __MODULE__)
-    Logger.info("[CpuGpuSentry.CpuGpuMinerLogStash] Started")
+    Logger.info("[CpuGpuSentry.LogStash] Started")
     {:ok, pid}
   end
 
   def update_hashrate_summary(%MinerProvision.HashrateSummary{}=hashrate_summary) do
     GenServer.cast(__MODULE__, {:update_hashrate_summary, hashrate_summary})
+  end
+
+  def update(key, value) when Kernel.is_atom(key) do
+    GenServer.cast(__MODULE__, {:update, key, value})
   end
 
   def get() do
@@ -57,7 +61,7 @@ defmodule CpuGpuSentry.CpuGpuMinerLogStash do
 
   @impl true
   def init(_params) do
-    {:ok, %CpuGpuSentry.CpuGpuMinerLogStash.State{}}
+    {:ok, %CpuGpuSentry.LogStash.State{}}
   end
 
   @impl true
@@ -67,6 +71,12 @@ defmodule CpuGpuSentry.CpuGpuMinerLogStash do
       Enum.reduce(hashrate_summary_map, state, fn({e_key, e_value}, acc) ->
         Map.put(acc, e_key, e_value)
       end)
+    {:noreply, state_mod}
+  end
+
+  @impl true
+  def handle_cast({:update, key, value}, state) do
+    state_mod = Map.put(state, key, value)
     {:noreply, state_mod}
   end
 

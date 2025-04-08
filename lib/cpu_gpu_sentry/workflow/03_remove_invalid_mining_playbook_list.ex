@@ -14,7 +14,9 @@ defmodule CpuGpuSentry.Workflow.RemoveInvalidMiningPlaybookList do
 
   def compare_mining_playbook_map(map_1, map_2) do
     compared_keys = [:id, :software_name, :software_version, :module, :command_argument,
-                     :algorithm_1, :algorithm_2, :coin_name_1, :coin_name_2]
+                     :cpu_coin_name, :cpu_algorithm,
+                     :gpu_coin_name_1, :gpu_algorithm_1,
+                     :gpu_coin_name_2, :gpu_algorithm_2]
     map_1_mod = Enum.reduce(map_1, %{}, fn(e, a) ->
       {k, v} = e
       Map.put(a, k, Map.take(v, compared_keys))

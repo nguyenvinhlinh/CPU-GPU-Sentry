@@ -1,4 +1,4 @@
-defmodule CpuGpuSentry.CpuGpuMinerLogStashTest  do
+defmodule CpuGpuSentry.LogStashTest  do
   use ExUnit.Case
   alias MinerProvision.HashrateSummary
 
@@ -18,9 +18,9 @@ defmodule CpuGpuSentry.CpuGpuMinerLogStashTest  do
       gpu_hashrate_uom_1: "KH/s", gpu_hashrate_uom_2: "GH/s"
     }
 
-    CpuGpuSentry.CpuGpuMinerLogStash.update_hashrate_summary(hashrate_summary)
-    test_result = CpuGpuSentry.CpuGpuMinerLogStash.get()
-    expected_result = %CpuGpuSentry.CpuGpuMinerLogStash.State{
+    CpuGpuSentry.LogStash.update_hashrate_summary(hashrate_summary)
+    test_result = CpuGpuSentry.LogStash.get()
+    expected_result = %CpuGpuSentry.LogStash.State{
       cpu_hashrate: 1, cpu_hashrate_uom: "H/s",
 
       gpu_1_hashrate_1: 11, gpu_2_hashrate_1: 12,

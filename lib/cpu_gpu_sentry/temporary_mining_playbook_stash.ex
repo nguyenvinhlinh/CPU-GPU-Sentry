@@ -23,10 +23,22 @@ defmodule CpuGpuSentry.TemporaryMiningPlaybookStash do
       software_version: Map.get(mining_playbook, "software_version"),
       module: Map.get(mining_playbook, "module") |> String.to_atom(),
       command_argument: Map.get(mining_playbook, "command_argument"),
-      algorithm_1: Map.get(mining_playbook, "algorithm_1"),
-      algorithm_2: Map.get(mining_playbook, "algorithm_2"),
-      coin_name_1: Map.get(mining_playbook, "coin_name_1"),
-      coin_name_2: Map.get(mining_playbook, "coin_name_2"),
+
+      cpu_coin_name:      Map.get(mining_playbook, "cpu_coin_name"),
+      cpu_algorithm:      Map.get(mining_playbook, "cpu_algorithm"),
+      cpu_pool_address:   Map.get(mining_playbook, "cpu_pool_address"),
+      cpu_wallet_address: Map.get(mining_playbook, "cpu_wallet_address"),
+
+      gpu_coin_name_1:      Map.get(mining_playbook, "gpu_coin_name_1"),
+      gpu_algorithm_1:      Map.get(mining_playbook, "gpu_algorithm_1"),
+      gpu_pool_address_1:   Map.get(mining_playbook, "gpu_pool_address_1"),
+      gpu_wallet_address_1: Map.get(mining_playbook, "gpu_wallet_address_1"),
+
+      gpu_coin_name_2: Map.get(mining_playbook, "gpu_coin_name_2"),
+      gpu_algorithm_2: Map.get(mining_playbook, "gpu_algorithm_2"),
+      gpu_pool_address_2:   Map.get(mining_playbook, "gpu_pool_address_2"),
+      gpu_wallet_address_2: Map.get(mining_playbook, "gpu_wallet_address_2"),
+
       expected_status: Map.get(mining_playbook, "expected_status", "mining") |> String.to_atom(),
       inserted_at: Map.get(mining_playbook, "inserted_at") |> NaiveDateTime.from_iso8601!(),
       updated_at: Map.get(mining_playbook, "updated_at") |> NaiveDateTime.from_iso8601!()
