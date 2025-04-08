@@ -28,8 +28,10 @@ defmodule CpuGpuSentry.LogUpdater do
 
     lan_ip = get_lan_ip()
     wan_ip = get_wan_ip()
+    uptime = get_uptime()
     CpuGpuSentry.LogStash.update(:lan_ip, lan_ip)
     CpuGpuSentry.LogStash.update(:wan_ip, wan_ip)
+    CpuGpuSentry.LogStash.update(:uptime, uptime)
 
     for {_playbook_id, playbook}  <- playbook_list do
       if playbook.current_status == :mining do
@@ -77,5 +79,10 @@ defmodule CpuGpuSentry.LogUpdater do
         Logger.error("[CpuGpuSentry.LogUpdater] Cannot get WAN IP")
         nil
     end
+  end
+
+  def get_uptime() do
+    {uptime_cmd_output, _status} = System.cmd("uptime", ["-p"])
+    String.replace(uptime_cmd_output, "up ", "")
   end
 end
