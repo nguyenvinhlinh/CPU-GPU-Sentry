@@ -11,28 +11,38 @@ defmodule CpuGpuSentry.LogUpdater do
 
   @impl true
   def init(_args) do
+    Process.send_after(__MODULE__, :execute_once, 10_000)
     Process.send_after(__MODULE__, :execute_loop, 30_000)
     {:ok, nil}
   end
 
-    @impl true
+  @impl true
+  def handle_info(:execute_once, _state) do
+    execute_once()
+    {:noreply, nil}
+  end
+
+
+  @impl true
   def handle_info(:execute_loop, _state) do
-    execute()
+    execute_loop()
     Process.send_after(__MODULE__, :execute_loop, 5_000)
     {:noreply, nil}
   end
 
-  def execute() do
-    Logger.info("[CpuGpuSentry.LogUpdater] execute")
-    playbook_list = CpuGpuSentry.MiningPlaybookStash.get_all()
 
+  def execute_once() do
     lan_ip = get_lan_ip()
     wan_ip = get_wan_ip()
     uptime = get_uptime()
     CpuGpuSentry.LogStash.update(:lan_ip, lan_ip)
     CpuGpuSentry.LogStash.update(:wan_ip, wan_ip)
     CpuGpuSentry.LogStash.update(:uptime, uptime)
+  end
 
+  def execute_loop() do
+    Logger.info("[CpuGpuSentry.LogUpdater] execute")
+    playbook_list = CpuGpuSentry.MiningPlaybookStash.get_all()
     for {_playbook_id, playbook}  <- playbook_list do
       if playbook.current_status == :mining do
         hashrate_summary = Kernel.apply(playbook.module, :get_hashrate_summary, [])
@@ -53,10 +63,8 @@ defmodule CpuGpuSentry.LogUpdater do
         CpuGpuSentry.LogStash.update(:cpu_wallet_address, playbook.cpu_wallet_address)
         CpuGpuSentry.LogStash.update(:gpu_wallet_address_1, playbook.gpu_wallet_address_1)
         CpuGpuSentry.LogStash.update(:gpu_wallet_address_2, playbook.gpu_wallet_address_2)
-
       end
     end
-
   end
 
   def get_lan_ip() do
@@ -84,5 +92,6 @@ defmodule CpuGpuSentry.LogUpdater do
   def get_uptime() do
     {uptime_cmd_output, _status} = System.cmd("uptime", ["-p"])
     String.replace(uptime_cmd_output, "up ", "")
+    String.replace(uptime_cmd_output, "\n", "")
   end
 end
