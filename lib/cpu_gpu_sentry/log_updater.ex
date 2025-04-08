@@ -25,6 +25,12 @@ defmodule CpuGpuSentry.LogUpdater do
   def execute() do
     Logger.info("[CpuGpuSentry.LogUpdater] execute")
     playbook_list = CpuGpuSentry.MiningPlaybookStash.get_all()
+
+    lan_ip = get_lan_ip()
+    wan_ip = get_wan_ip()
+    CpuGpuSentry.LogStash.update(:lan_ip, lan_ip)
+    CpuGpuSentry.LogStash.update(:wan_ip, wan_ip)
+
     for {_playbook_id, playbook}  <- playbook_list do
       if playbook.current_status == :mining do
         hashrate_summary = Kernel.apply(playbook.module, :get_hashrate_summary, [])
@@ -45,7 +51,31 @@ defmodule CpuGpuSentry.LogUpdater do
         CpuGpuSentry.LogStash.update(:cpu_wallet_address, playbook.cpu_wallet_address)
         CpuGpuSentry.LogStash.update(:gpu_wallet_address_1, playbook.gpu_wallet_address_1)
         CpuGpuSentry.LogStash.update(:gpu_wallet_address_2, playbook.gpu_wallet_address_2)
+
       end
+    end
+
+  end
+
+  def get_lan_ip() do
+    arg_list = ["-o", "route", "get", "to", "8.8.8.8"]
+    {ip_cmd_output, _status} = System.cmd("ip", arg_list)
+    parse_lan_ip(ip_cmd_output)
+  end
+
+  def parse_lan_ip(ip_output) do
+    regular_expression = ~r/src (?<lan_ip>[0-9.]+)/
+    Regex.named_captures(regular_expression, ip_output)
+    |> Map.get("lan_ip")
+  end
+
+  def get_wan_ip() do
+    url = "https://api.ipify.org"
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> body
+      _ ->
+        Logger.error("[CpuGpuSentry.LogUpdater] Cannot get WAN IP")
+        nil
     end
   end
 end
