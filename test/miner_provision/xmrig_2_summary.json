@@ -1,0 +1,76 @@
+{
+    "id": "7bcfb15de5917b13",
+    "worker_id": "caheo-workstation",
+    "uptime": 56,
+    "restricted": true,
+    "resources": {
+        "memory": {
+            "free": 106839400448,
+            "total": 135024365568,
+            "resident_set_memory": 2444886016
+        },
+        "load_average": [22.25, 24.22, 25.97],
+        "hardware_concurrency": 56
+    },
+    "features": ["api", "asm", "http", "hwloc", "tls"],
+    "results": {
+        "diff_current": 130912,
+        "shares_good": 5,
+        "shares_total": 5,
+        "avg_time": 11,
+        "avg_time_ms": 11198,
+        "hashes_total": 654560,
+        "best": [1708788, 770722, 672448, 136750, 135043, 0, 0, 0, 0, 0]
+    },
+    "algo": "rx/0",
+    "connection": {
+        "pool": "pool.hashvault.pro:443",
+        "ip": "157.20.104.252",
+        "uptime": 55,
+        "uptime_ms": 55992,
+        "ping": 54,
+        "failures": 0,
+        "tls": null,
+        "tls-fingerprint": null,
+        "algo": "rx/0",
+        "diff": 130912,
+        "accepted": 5,
+        "rejected": 0,
+        "avg_time": 11,
+        "avg_time_ms": 11198,
+        "hashes_total": 654560
+    },
+    "version": "6.22.2",
+    "kind": "miner",
+    "ua": "XMRig/6.22.2 (Linux x86_64) libuv/1.49.2 gcc/13.2.1",
+    "cpu": {
+        "brand": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+        "family": 6,
+        "model": 79,
+        "stepping": 1,
+        "proc_info": 263921,
+        "aes": true,
+        "avx2": true,
+        "x64": true,
+        "64_bit": true,
+        "l2": 7340032,
+        "l3": 73400320,
+        "cores": 28,
+        "threads": 56,
+        "packages": 2,
+        "nodes": 2,
+        "backend": "hwloc/2.11.2",
+        "msr": "intel",
+        "assembly": "intel",
+        "arch": "x86_64",
+        "flags": ["aes", "avx", "avx2", "bmi2", "osxsave", "pdpe1gb", "sse2", "ssse3", "sse4.1", "popcnt", "cat_l3"]
+    },
+    "donate_level": 1,
+    "paused": false,
+    "algorithms": ["cn/1", "cn/2", "cn/r", "cn/fast", "cn/half", "cn/xao", "cn/rto", "cn/rwz", "cn/zls", "cn/double", "cn/ccx", "cn-lite/1", "cn-heavy/0", "cn-heavy/tube", "cn-heavy/xhv", "cn-pico", "cn-pico/tlo", "cn/upx2", "rx/0", "rx/wow", "rx/arq", "rx/graft", "rx/sfx", "rx/yada", "argon2/chukwa", "argon2/chukwav2", "argon2/ninja", "ghostrider"],
+    "hashrate": {
+        "total": [9563.2, null, null],
+        "highest": 10037.56
+    },
+    "hugepages": [1067, 2236]
+}
