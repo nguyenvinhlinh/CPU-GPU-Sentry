@@ -60,9 +60,6 @@ defmodule CpuGpuSentry.CpuGpuMinerLogStash do
     {:ok, %CpuGpuSentry.CpuGpuMinerLogStash.State{}}
   end
 
-
-
-
   @impl true
   def handle_cast({:update_hashrate_summary, %MinerProvision.HashrateSummary{}=hashrate_summary}, state) do
     hashrate_summary_map = Map.from_struct(hashrate_summary)

@@ -1,13 +1,7 @@
 defmodule CpuGpuSentry.MiningPlaybookStash do
   use GenServer
   require Logger
-
-  defmodule MiningPlaybook do
-    defstruct [:id, :software_name, :software_version, :module, :command_argument,
-               :algorithm_1, :algorithm_2, :coin_name_1, :coin_name_2,
-               :expected_status, :current_status, :inserted_at, :updated_at]
-  end
-
+  alias CpuGpuSentry.MiningPlaybookStash.MiningPlaybook
 
   def start_link(_args), do: start_link()
   def start_link() do
