@@ -88,7 +88,7 @@ defmodule MinerProvision.XMRIG_6_22_2 do
     |> Map.get("total")
     |> Enum.at(0)
 
-    cpu_hashrate_mod = if(cpu_hashrate == nil, do: nil, else: Kernel.round(cpu_hashrate))
+    cpu_hashrate_mod = if(cpu_hashrate == nil, do: nil, else: Kernel.ceil(cpu_hashrate))
 
     %MinerProvision.HashrateSummary{
       cpu_hashrate_uom: "H/s",

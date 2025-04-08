@@ -11,7 +11,8 @@ defmodule CpuGpuSentry.Application do
      {CpuGpuSentry.EventStash, nil},
      {CpuGpuSentry.TemporaryMiningPlaybookStash, nil},
      {CpuGpuSentry.MiningPlaybookStash, nil},
-     {CpuGpuSentry.MainWorkflow, nil}
+     {CpuGpuSentry.MainWorkflow, nil},
+     {CpuGpuSentry.CpuGpuMinerLogStash, nil}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
