@@ -91,7 +91,9 @@ defmodule CpuGpuSentry.LogUpdater do
 
   def get_uptime() do
     {uptime_cmd_output, _status} = System.cmd("uptime", ["-p"])
-    String.replace(uptime_cmd_output, "up ", "")
-    String.replace(uptime_cmd_output, "\n", "")
+
+    uptime_cmd_output
+    |> String.replace("up ", "")
+    |> String.replace("\n", "")
   end
 end
