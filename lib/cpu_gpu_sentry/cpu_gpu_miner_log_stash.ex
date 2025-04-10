@@ -54,6 +54,10 @@ defmodule CpuGpuSentry.LogStash do
     GenServer.cast(__MODULE__, {:update, key, value})
   end
 
+  def update_with_map(a_map) when Kernel.is_map(a_map) do
+    GenServer.cast(__MODULE__, {:update_with_map, a_map})
+  end
+
   def get() do
     GenServer.call(__MODULE__, :get)
   end
@@ -77,6 +81,15 @@ defmodule CpuGpuSentry.LogStash do
   @impl true
   def handle_cast({:update, key, value}, state) do
     state_mod = Map.put(state, key, value)
+    {:noreply, state_mod}
+  end
+
+  @impl true
+  def handle_cast({:update_with_map, a_map}, state) when Kernel.is_map(a_map) do
+    state_mod =
+      Enum.reduce(a_map, state, fn({key, value} , acc) ->
+        Map.put(acc, key, value)
+      end)
     {:noreply, state_mod}
   end
 
