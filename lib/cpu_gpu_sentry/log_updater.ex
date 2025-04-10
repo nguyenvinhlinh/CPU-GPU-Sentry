@@ -42,6 +42,10 @@ defmodule CpuGpuSentry.LogUpdater do
 
   def execute_loop() do
     Logger.info("[CpuGpuSentry.LogUpdater] execute")
+
+    cpu_temp = get_cpu_temp()
+    CpuGpuSentry.LogStash.update(:cpu_temp, cpu_temp)
+
     playbook_list = CpuGpuSentry.MiningPlaybookStash.get_all()
     for {_playbook_id, playbook}  <- playbook_list do
       if playbook.current_status == :mining do
@@ -95,5 +99,43 @@ defmodule CpuGpuSentry.LogUpdater do
     uptime_cmd_output
     |> String.replace("up ", "")
     |> String.replace("\n", "")
+  end
+
+  def get_cpu_temp() do
+    {sensors_cmd_output, _status } = System.cmd("sensors", ["-j"])
+    parse_cpu_temp(sensors_cmd_output)
+  end
+
+  def parse_cpu_temp(sensors_cmd_output) when Kernel.is_binary(sensors_cmd_output) do
+    sensors_cmd_output_map = Jason.decode!(sensors_cmd_output)
+
+    temp_1 = parse_cpu_temp_type_1(sensors_cmd_output_map)
+    temp_2 = parse_cpu_temp_type_2(sensors_cmd_output_map)
+
+    [temp_1, temp_2]
+    |> Enum.filter( &(&1 != nil))
+    |> Enum.max()
+  end
+
+  def parse_cpu_temp_type_1(sensors_cmd_output_map) when Kernel.is_map(sensors_cmd_output_map) do
+    cpu_temp_1 = Map.get(sensors_cmd_output_map, "coretemp-isa-0000", %{})
+    |> Map.get("Package id 0", %{})
+    |> Map.get("temp1_input", -1)
+
+    cpu_temp_2 = Map.get(sensors_cmd_output_map, "coretemp-isa-0001", %{})
+    |> Map.get("Package id 1", %{})
+    |> Map.get("temp1_input", -1)
+
+    temp = Enum.max([cpu_temp_1, cpu_temp_2])
+
+    if temp == -1, do: nil, else: Kernel.ceil(temp)
+  end
+
+  def parse_cpu_temp_type_2(sensors_cmd_output_map) when Kernel.is_map(sensors_cmd_output_map) do
+    temp= Map.get(sensors_cmd_output_map, "k10temp-pci-00c3", %{})
+    |> Map.get("Tctl", %{})
+    |> Map.get("temp1_input")
+
+    if temp == nil,  do: nil, else: Kernel.ceil(temp)
   end
 end

@@ -8,4 +8,33 @@ defmodule CpuGpuSentry.LogUpdaterTest do
     assert test_result == expected_result
   end
 
+  test "parse_cpu_temp_type_1" do
+    cmd_output = File.read!("./test/test_assets/sensors-1.json")
+    sensor_cmd_output_map = Jason.decode!(cmd_output)
+    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp_type_1(sensor_cmd_output_map)
+    expected_result = 70
+    assert test_result == expected_result
+  end
+
+  test "parse_cpu_temp 1" do
+    cmd_output = File.read!("./test/test_assets/sensors-1.json")
+    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp(cmd_output)
+    expected_result = 70
+    assert test_result == expected_result
+  end
+
+  test "parse_cpu_temp_type_2" do
+    cmd_output = File.read!("./test/test_assets/sensors-2.json")
+    sensor_cmd_output_map = Jason.decode!(cmd_output)
+    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp_type_2(sensor_cmd_output_map)
+    expected_result = 85
+    assert test_result == expected_result
+  end
+
+  test "parse_cpu_temp 2" do
+    cmd_output = File.read!("./test/test_assets/sensors-2.json")
+    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp(cmd_output)
+    expected_result = 85
+    assert test_result == expected_result
+  end
 end
