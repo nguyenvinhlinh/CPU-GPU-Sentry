@@ -54,22 +54,25 @@ defmodule CpuGpuSentry.LogUpdater do
       if playbook.current_status == :mining do
         hashrate_summary = Kernel.apply(playbook.module, :get_hashrate_summary, [])
         CpuGpuSentry.LogStash.update_hashrate_summary(hashrate_summary)
-        Logger.info("[CpuGpuSentry.LogUpdater] update too many, should reduce it")
-        CpuGpuSentry.LogStash.update(:cpu_coin_name, playbook.cpu_coin_name)
-        CpuGpuSentry.LogStash.update(:gpu_coin_name_1, playbook.gpu_coin_name_1)
-        CpuGpuSentry.LogStash.update(:gpu_coin_name_2, playbook.gpu_coin_name_2)
 
-        CpuGpuSentry.LogStash.update(:cpu_algorithm, playbook.cpu_algorithm)
-        CpuGpuSentry.LogStash.update(:gpu_algorithm_1, playbook.gpu_algorithm_1)
-        CpuGpuSentry.LogStash.update(:gpu_algorithm_2, playbook.gpu_algorithm_2)
+        update_map = %{
+          cpu_coin_name: playbook.cpu_coin_name,
+          gpu_coin_name_1: playbook.gpu_coin_name_1,
+          gpu_coin_name_2: playbook.gpu_coin_name_2,
 
-        CpuGpuSentry.LogStash.update(:cpu_pool_address, playbook.cpu_pool_address)
-        CpuGpuSentry.LogStash.update(:gpu_pool_address_1, playbook.gpu_pool_address_1)
-        CpuGpuSentry.LogStash.update(:gpu_pool_address_2, playbook.gpu_pool_address_2)
+          cpu_algorithm: playbook.cpu_algorithm,
+          gpu_algorithm_1: playbook.gpu_algorithm_1,
+          gpu_algorithm_2: playbook.gpu_algorithm_2,
 
-        CpuGpuSentry.LogStash.update(:cpu_wallet_address, playbook.cpu_wallet_address)
-        CpuGpuSentry.LogStash.update(:gpu_wallet_address_1, playbook.gpu_wallet_address_1)
-        CpuGpuSentry.LogStash.update(:gpu_wallet_address_2, playbook.gpu_wallet_address_2)
+          cpu_pool_address: playbook.cpu_pool_address,
+          gpu_pool_address_1: playbook.gpu_pool_address_1,
+          gpu_pool_address_2: playbook.gpu_pool_address_2,
+
+          cpu_wallet_address: playbook.cpu_wallet_address,
+          gpu_wallet_address_1: playbook.gpu_wallet_address_1,
+          gpu_wallet_address_2: playbook.gpu_wallet_address_2,
+        }
+        CpuGpuSentry.LogStash.update_with_map(update_map)
       end
     end
   end
