@@ -32,7 +32,7 @@ defmodule CpuGpuSentry.SystemData do
       |> String.replace("up ", "")
       |> String.replace("\n", "")
     else
-      Logger.warn("[CpuGpuSentry.LogUpdater] get_uptime/0 does not work due to #{command} not found.")
+      Logger.warning("[CpuGpuSentry.LogUpdater] get_uptime/0 does not work due to #{command} not found.")
       nil
     end
   end
@@ -43,7 +43,7 @@ defmodule CpuGpuSentry.SystemData do
       {sensors_cmd_output, _status } = System.cmd("sensors", ["-j"])
       parse_cpu_temp(sensors_cmd_output)
     else
-      Logger.warn("[CpuGpuSentry.LogUpdater] get_cpu_temp/0 does not work due to #{command} not found.")
+      Logger.warning("[CpuGpuSentry.LogUpdater] get_cpu_temp/0 does not work due to #{command} not found.")
       nil
     end
   end
@@ -56,7 +56,7 @@ defmodule CpuGpuSentry.SystemData do
          "--format=csv"])
       parse_gpu_data(nvidia_smi_cmd_output)
     else
-      Logger.warn("[CpuGpuSentry.LogUpdater] get_gpu_data/0 does not work due to #{command} not found.")
+      Logger.warning("[CpuGpuSentry.LogUpdater] get_gpu_data/0 does not work due to #{command} not found.")
       %{}
     end
   end
