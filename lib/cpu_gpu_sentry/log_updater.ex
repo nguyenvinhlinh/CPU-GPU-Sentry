@@ -201,6 +201,12 @@ defmodule CpuGpuSentry.LogUpdater do
       |> Map.put(fan_key,        fan_value)
       |> Map.put(power_key,      power_value)
     end)
+  end
 
+  def is_command_exist?(command) when Kernel.is_binary(command) do
+    case System.cmd("which", [command]) do
+      {_, 0} -> true
+      {_, 1} -> false
+    end
   end
 end

@@ -61,4 +61,19 @@ defmodule CpuGpuSentry.LogUpdaterTest do
     expected_result = %{gpu_fan_uom: "%"}
     assert test_result == expected_result
   end
+
+  test "is_command_exist? 1" do
+    command = "sh"
+    test_result = CpuGpuSentry.LogUpdater.is_command_exist?(command)
+    expected_result = true
+    assert test_result == expected_result
+  end
+
+
+  test "is_command_exist? 2" do
+    command = "bad_command"
+    test_result = CpuGpuSentry.LogUpdater.is_command_exist?(command)
+    expected_result = false
+    assert test_result == expected_result
+  end
 end
