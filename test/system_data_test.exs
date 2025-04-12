@@ -1,9 +1,10 @@
-defmodule CpuGpuSentry.LogUpdaterTest do
+defmodule CpuGpuSentry.SystemDataTest do
   use ExUnit.Case
+  alias CpuGpuSentry.SystemData
 
   test "parse_lan_ip" do
     string = "8.8.8.8 via 192.168.0.1 dev eno1 src 192.168.0.103 uid 1000 \    cache "
-    test_result = CpuGpuSentry.LogUpdater.parse_lan_ip(string)
+    test_result = SystemData.parse_lan_ip(string)
     expected_result = "192.168.0.103"
     assert test_result == expected_result
   end
@@ -11,14 +12,14 @@ defmodule CpuGpuSentry.LogUpdaterTest do
   test "parse_cpu_temp_type_1" do
     cmd_output = File.read!("./test/test_assets/sensors-1.json")
     sensor_cmd_output_map = Jason.decode!(cmd_output)
-    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp_type_1(sensor_cmd_output_map)
+    test_result = SystemData.parse_cpu_temp_type_1(sensor_cmd_output_map)
     expected_result = 70
     assert test_result == expected_result
   end
 
   test "parse_cpu_temp 1" do
     cmd_output = File.read!("./test/test_assets/sensors-1.json")
-    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp(cmd_output)
+    test_result = SystemData.parse_cpu_temp(cmd_output)
     expected_result = 70
     assert test_result == expected_result
   end
@@ -26,21 +27,21 @@ defmodule CpuGpuSentry.LogUpdaterTest do
   test "parse_cpu_temp_type_2" do
     cmd_output = File.read!("./test/test_assets/sensors-2.json")
     sensor_cmd_output_map = Jason.decode!(cmd_output)
-    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp_type_2(sensor_cmd_output_map)
+    test_result = SystemData.parse_cpu_temp_type_2(sensor_cmd_output_map)
     expected_result = 85
     assert test_result == expected_result
   end
 
   test "parse_cpu_temp 2" do
     cmd_output = File.read!("./test/test_assets/sensors-2.json")
-    test_result = CpuGpuSentry.LogUpdater.parse_cpu_temp(cmd_output)
+    test_result = SystemData.parse_cpu_temp(cmd_output)
     expected_result = 85
     assert test_result == expected_result
   end
 
   test "parse_gpu_data 1" do
     cmd_output = File.read!("./test/test_assets/nvidia_smi_gpu_temp_fan_power-1.csv")
-    test_result = CpuGpuSentry.LogUpdater.parse_gpu_data(cmd_output)
+    test_result = SystemData.parse_gpu_data(cmd_output)
 
     expected_result = %{
       gpu_1_core_temp: 63, gpu_2_core_temp: 65, gpu_3_core_temp: 67,
@@ -56,7 +57,7 @@ defmodule CpuGpuSentry.LogUpdaterTest do
 
   test "parse_gpu_data 2" do
     cmd_output = File.read!("./test/test_assets/nvidia_smi_gpu_temp_fan_power-2.csv")
-    test_result = CpuGpuSentry.LogUpdater.parse_gpu_data(cmd_output)
+    test_result = SystemData.parse_gpu_data(cmd_output)
 
     expected_result = %{gpu_fan_uom: "%"}
     assert test_result == expected_result
@@ -64,15 +65,14 @@ defmodule CpuGpuSentry.LogUpdaterTest do
 
   test "is_command_exist? 1" do
     command = "sh"
-    test_result = CpuGpuSentry.LogUpdater.is_command_exist?(command)
+    test_result = SystemData.is_command_exist?(command)
     expected_result = true
     assert test_result == expected_result
   end
 
-
   test "is_command_exist? 2" do
     command = "bad_command"
-    test_result = CpuGpuSentry.LogUpdater.is_command_exist?(command)
+    test_result = SystemData.is_command_exist?(command)
     expected_result = false
     assert test_result == expected_result
   end
