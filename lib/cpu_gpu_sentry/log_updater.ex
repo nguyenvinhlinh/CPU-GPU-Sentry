@@ -100,21 +100,41 @@ defmodule CpuGpuSentry.LogUpdater do
   end
 
   def get_uptime() do
-    {uptime_cmd_output, _status} = System.cmd("uptime", ["-p"])
+    command = "uptime"
+    if is_command_exist?(command) do
+      {uptime_cmd_output, _status} = System.cmd("uptime", ["-p"])
 
-    uptime_cmd_output
-    |> String.replace("up ", "")
-    |> String.replace("\n", "")
+      uptime_cmd_output
+      |> String.replace("up ", "")
+      |> String.replace("\n", "")
+    else
+      Logger.warn("[CpuGpuSentry.LogUpdater] get_uptime/0 does not work due to #{command} not found.")
+      nil
+    end
   end
 
   def get_cpu_temp() do
-    {sensors_cmd_output, _status } = System.cmd("sensors", ["-j"])
-    parse_cpu_temp(sensors_cmd_output)
+    command = "sensors"
+    if is_command_exist?(command) do
+      {sensors_cmd_output, _status } = System.cmd("sensors", ["-j"])
+      parse_cpu_temp(sensors_cmd_output)
+    else
+      Logger.warn("[CpuGpuSentry.LogUpdater] get_cpu_temp/0 does not work due to #{command} not found.")
+      nil
+    end
   end
 
   def get_gpu_data() do
-    {nvidia_smi_cmd_output, _status } = System.cmd("nvidia-smi", ["--query-gpu=pci.bus_id,name,temperature.gpu,temperature.memory,clocks.current.graphics,clocks.current.memory,fan.speed,power.draw", "--format=csv"])
-    parse_gpu_data(nvidia_smi_cmd_output)
+    command = "nvidia-smi"
+    if is_command_exist?(command) do
+      {nvidia_smi_cmd_output, _status } = System.cmd(command,
+        ["--query-gpu=pci.bus_id,name,temperature.gpu,temperature.memory,clocks.current.graphics,clocks.current.memory,fan.speed,power.draw",
+         "--format=csv"])
+      parse_gpu_data(nvidia_smi_cmd_output)
+    else
+      Logger.warn("[CpuGpuSentry.LogUpdater] get_gpu_data/0 does not work due to #{command} not found.")
+      %{}
+    end
   end
 
   def parse_cpu_temp(sensors_cmd_output) when Kernel.is_binary(sensors_cmd_output) do
