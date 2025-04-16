@@ -8,10 +8,12 @@ defmodule CpuGpuSentry.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: CpuGpuSentry.Worker.start_link(arg)
-      # {CpuGpuSentry.Worker, arg}
-      {CpuGpuSentry.EventStash, nil},
-      {CpuGpuSentry.EventDispatcher, nil}
+      {CpuGpuSentry.TemporaryMiningPlaybookStash, nil},
+      {CpuGpuSentry.MiningPlaybookStash, nil},
+      {CpuGpuSentry.MainWorkflow, nil},
+      {CpuGpuSentry.LogStash, nil},
+      {CpuGpuSentry.LogUpdater, nil},
+      {CpuGpuSentry.LogSender, nil}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

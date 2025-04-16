@@ -1,10 +1,12 @@
-defmodule Miner.XMRIG_6_22_2 do
+defmodule MinerProvision.XMRIG_6_22_2 do
  # @behaviour Miners.GenericMiner
   require Logger
   alias HTTPoison.Response
 
   @url "https://github.com/xmrig/xmrig/releases/download/v6.22.2/xmrig-6.22.2-linux-static-x64.tar.gz"
   @miner_archive_filename "xmrig-6.22.2-linux-static-x64.tar.gz"
+  @xmrig_api_path "/2/summary"
+  @xmr_monitor_port "10001"
 
   #@impl Miners.GenericMiner
   def setup do
@@ -27,7 +29,7 @@ defmodule Miner.XMRIG_6_22_2 do
     wrapper_script_path = Path.join([installation_path, "miner_softwares", "wrapper.sh"])
     xmrig_file_path =     Path.join([installation_path, "miner_softwares", "xmrig-6.22.2", "xmrig"])
 
-    mod_args_list = [xmrig_file_path] ++ args_list
+    mod_args_list = [xmrig_file_path] ++ args_list ++ ["--http-port", @xmr_monitor_port]
     port = Port.open({:spawn_executable, wrapper_script_path}, [:binary, args: mod_args_list])
     port
   end
@@ -63,6 +65,35 @@ defmodule Miner.XMRIG_6_22_2 do
     miner_softwares_directory = Path.join([installation_path, "miner_softwares"])
     Logger.info("[XMRIG_6_22_2] Extract file #{miner_archive_file_path} to #{miner_softwares_directory}")
     :erl_tar.extract(miner_archive_file_path, [{:cwd, miner_softwares_directory}, :compressed])
+  end
+
+  def get_hashrate_summary() do
+    url = Path.join(["127.0.0.1:10001", @xmrig_api_path])
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        parse_xmrig_summary(body)
+      _ ->
+        Logger.error("[XMRIG_6_22_2] Cannot get xmrig summary #{url}")
+        %MinerProvision.HashrateSummary{}
+    end
+  end
+
+
+  def parse_xmrig_summary(json_string) do
+    xmrig_summary_map = json_string
+    |> Jason.decode!()
+
+    cpu_hashrate = xmrig_summary_map
+    |> Map.get("hashrate")
+    |> Map.get("total")
+    |> Enum.at(0)
+
+    cpu_hashrate_mod = if(cpu_hashrate == nil, do: nil, else: Kernel.ceil(cpu_hashrate))
+
+    %MinerProvision.HashrateSummary{
+      cpu_hashrate_uom: "H/s",
+      cpu_hashrate: cpu_hashrate_mod
+    }
   end
 
   defp http_get(url) do

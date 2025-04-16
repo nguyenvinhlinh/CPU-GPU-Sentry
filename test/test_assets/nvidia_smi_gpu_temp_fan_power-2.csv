@@ -1,0 +1,1 @@
+pci.bus_id, name, temperature.gpu, temperature.memory, clocks.current.graphics [MHz], clocks.current.memory [MHz], fan.speed [%], power.draw [W]
