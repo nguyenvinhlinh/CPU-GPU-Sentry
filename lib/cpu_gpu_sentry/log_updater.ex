@@ -45,6 +45,9 @@ defmodule CpuGpuSentry.LogUpdater do
     cpu_temp = SystemData.get_cpu_temp()
     CpuGpuSentry.LogStash.update(:cpu_temp, cpu_temp)
 
+    uptime = SystemData.get_uptime()
+    CpuGpuSentry.LogStash.update(:uptime, uptime)
+
     gpu_data_map = SystemData.get_gpu_data()
     CpuGpuSentry.LogStash.update_with_map(gpu_data_map)
 
