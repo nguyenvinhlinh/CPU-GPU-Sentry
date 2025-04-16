@@ -22,4 +22,7 @@ if config_env() == :prod do
     For example: api_code_1
     """
   config :cpu_gpu_sentry, :api_code, api_code
+
+  mining_rig_monitor_server_name = System.get_env("MINING_RIG_MONITOR_SERVER_NAME")
+  config :cpu_gpu_sentry, :mining_rig_monitor_server_name, mining_rig_monitor_server_name
 end
