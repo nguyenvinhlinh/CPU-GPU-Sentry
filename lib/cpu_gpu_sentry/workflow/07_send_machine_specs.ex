@@ -15,9 +15,10 @@ defmodule CpuGpuSentry.Workflow.SendMachineSpecs do
       {"content-type", "application/json"},
       {"api_code", api_code}
     ]
+    option_list =  CpuGpuSentry.HTTPoisonOption.option_list()
     body_encoded = Jason.encode!(body)
 
-    case HTTPoison.post(cpu_gpu_spec_url, body_encoded, header_list) do
+    case HTTPoison.post(cpu_gpu_spec_url, body_encoded, header_list, option_list) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Logger.info("[Workflow.SendMachineSpecs] Send machine specs to #{cpu_gpu_spec_url}")
       {:ok, %HTTPoison.Response{status_code: 422, body: body}} ->

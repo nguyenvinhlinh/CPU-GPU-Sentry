@@ -37,10 +37,10 @@ defmodule CpuGpuSentry.LogSender do
       {"content-type", "application/json"},
       {"api_code", api_code}
     ]
-
+    option_list =  CpuGpuSentry.HTTPoisonOption.option_list()
     body = Jason.encode!(log)
 
-    case HTTPoison.post(api_url, body, header_list) do
+    case HTTPoison.post(api_url, body, header_list, option_list) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Logger.info("[CpuGpuSentry.LogSender] Send log")
         {:ok}

@@ -22,13 +22,14 @@ defmodule CpuGpuSentry.Workflow.FetchMiningPlaybookList do
       {"content-type", "application/json"},
       {"api_code", api_code}
     ]
+    option_list = CpuGpuSentry.HTTPoisonOption.option_list()
 
-    case HTTPoison.get(url, header_list) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body} } ->
+    case HTTPoison.get(url, header_list, option_list) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         Logger.info("[Workflow.FetchMiningPlaybookList] Mining playbook list fetched")
         mining_playbook_list = Jason.decode!(body)
         {:ok, mining_playbook_list}
-      {:ok, %HTTPoison.Response{status_code: 401} } ->
+      {:ok, %HTTPoison.Response{status_code: 401}} ->
         Logger.error("[Workflow.FetchMiningPlaybookList] Invalid API_CODE")
         {:error, 401}
       error ->
